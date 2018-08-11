@@ -1,0 +1,11 @@
+# for Go/vgo:
+todo-list-api
+go.sum
+
+# for Mac:
+.DS_Store
+
+# for Docker:
+docker/db/data/*
+!docker/db/data/.gitkeep
+
