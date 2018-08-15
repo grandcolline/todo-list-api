@@ -1,3 +1,7 @@
+# -----------------------------------
+# DockerComposeFile For Development
+# -----------------------------------
+
 version: '3'
 
 services:
@@ -17,8 +21,8 @@ services:
     image: "mysql:5.7"
     container_name: "db"
     volumes:
-      - "./docker/db/data:/var/lib/mysql"
-      - "./docker/db/conf:/etc/mysql/conf.d"
+      - "./.docker/db/data:/var/lib/mysql"
+      - "./.docker/db/conf:/etc/mysql/conf.d"
     ports:
         - "3306:3306"
     environment:
@@ -26,7 +30,7 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=user
       - MYSQL_PASSWORD=pass
-  
+
 #  nginx:
 #    image: "nginx:latest"
 #    container_name: "nginx"

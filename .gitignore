@@ -6,6 +6,6 @@ go.sum
 .DS_Store
 
 # for Docker:
-docker/db/data/*
-!docker/db/data/.gitkeep
+.docker/db/data/*
+!.docker/db/data/.gitkeep
 

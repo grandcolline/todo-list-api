@@ -19,7 +19,7 @@ RUN go version && \
 RUN go get -u github.com/hysios/realize
 
 EXPOSE 8080
-EXPOSE 5002
+# EXPOSE 5002
 
 CMD ["realize", "start"]
 
