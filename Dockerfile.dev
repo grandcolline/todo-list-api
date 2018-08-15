@@ -1,0 +1,25 @@
+# ---------------------------
+# Dockerfile For Development
+# ---------------------------
+FROM golang:latest
+
+ENV CGO_ENABLED=0 \
+	GOOS=linux
+
+WORKDIR $GOPATH/src/github.com/grandcolline/todo-list-api
+
+COPY . .
+
+RUN go version && \
+	go get -u -v golang.org/x/vgo && \
+	vgo get
+
+# TODO:本体に取り込まれたら本体を見る
+#   -> https://github.com/oxequa/realize/pull/200
+RUN go get -u github.com/hysios/realize
+
+EXPOSE 8080
+EXPOSE 5002
+
+CMD ["realize", "start"]
+

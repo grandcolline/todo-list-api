@@ -1,4 +1,8 @@
-# ---------- For Build ----------
+# ---------------------------
+# Dockerfile For Production
+# ---------------------------
+
+# Build Image
 FROM golang:latest as build
 
 ENV CGO_ENABLED=0 \
@@ -11,7 +15,7 @@ RUN go version && go get -u -v golang.org/x/vgo
 RUN vgo build
 
 
-# -------- For Application --------
+# Application Image
 FROM gcr.io/distroless/base
 
 COPY --from=build /go/src/github.com/grandcolline/todo-list-api/ /
