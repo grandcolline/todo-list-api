@@ -1,4 +1,5 @@
 .git
 .docker
 Dockerfile*
+docker-comppse.yml
 
