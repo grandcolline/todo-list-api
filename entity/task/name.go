@@ -5,8 +5,10 @@ import (
 	"unicode/utf8"
 )
 
-// Name タスク名
-// 1文字以上50文字以内の文字列
+/*
+ Name タスク名
+ タスク名は1文字以上50文字以内の文字列の値オブジェクト
+*/
 type Name string
 
 // NewName はタスク名を生成する

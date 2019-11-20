@@ -43,4 +43,3 @@ func (tr *TaskRepoImpl) Delete(*entity.Task) error {
 func (tr *TaskRepoImpl) IsNotFound(error) bool {
 	return false
 }
-

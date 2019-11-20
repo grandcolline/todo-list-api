@@ -2,7 +2,10 @@ package task
 
 import "github.com/google/uuid"
 
-// ID タスクID
+/*
+ ID タスクID
+ タスクIDはタスクのUUIDである
+*/
 type ID uuid.UUID
 
 // NewID はタスクIDを生成する
@@ -17,7 +20,7 @@ func ToID(s string) (ID, error) {
 	return ID(uuid), err
 }
 
-// String はタスクIDをstringを返す
+// String はタスクIDをstringで返す
 func (id ID) String() string {
 	return uuid.UUID(id).String()
 }

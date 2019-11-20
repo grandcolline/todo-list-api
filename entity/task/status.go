@@ -2,12 +2,18 @@ package task
 
 import "fmt"
 
-// Status タスクステータス
+/*
+ Status タスクステータス
+ タスクステータスはタスクの状態を表す値オブジェクト
+   - Doing 作業中
+   - Complate 完了済み
+ の2つの状態を持つ
+*/
 type Status string
 
 const (
 	// Doing 作業中
-	Doing    Status = "doing"
+	Doing Status = "doing"
 	// Complate 完了済み
 	Complate Status = "complate"
 )
@@ -29,7 +35,7 @@ func ToStatus(s string) (Status, error) {
 	}
 }
 
-// String はタスクステータスをstringを返す
+// String はタスクステータスをstringで返す
 func (s Status) String() string {
 	return string(s)
 }
