@@ -1,16 +1,58 @@
 version: '3.7'
 
 services:
+  # app アプリケーション
   app:
     container_name: "app"
     build:
       context: .
       target: dev
+    command: realize start
     volumes:
       - ".:/go/src/github.com/grandcolline/todo-list-api"
       # --- exclude volums ---
       - /go/src/github.com/grandcolline/todo-list-api/.docker/
       - /go/src/github.com/grandcolline/todo-list-api/.git/
     ports:
-        - "8080:8080"
+      - "50051:50051"
+    environment:
+      - FIRESTORE_EMULATOR_HOST=firestore:8081
+    depends_on:
+      - firestore
+
+  # firestore データストアエミュレーション
+  firestore:
+    container_name: "firestore"
+    build:
+      context: .docker/firestore
+    environment:
+      - FIRESTORE_PROJECT_ID=todo-list-api
+      - FIRESTORE_PORT=8081
+    ports:
+      - "8081:8081"
+
+  # evans gRPCクライアント
+  evans:
+    container_name: "evans"
+    build:
+      context: .docker/evans
+    volumes:
+      - ./application/controller/proto/task.proto:/proto/task.proto
+    environment:
+      - EVANS_HOST=app
+      - EVANS_PORT=50051
+      - EVANS_PROTO_FILE=task.proto
+    command: "evans --host app -p 50051 task.proto"
+    # command: "bash"
+    depends_on:
+      - app
+
+  # protoc gRPCコードジェネレータ
+  protoc:
+    container_name: "protoc"
+    image: znly/protoc:0.4.0
+    volumes:
+      - ./application/controller/proto:/workspace
+    working_dir: /workspace
+    command: "-I . --go_out=plugins=grpc:./pb/ --doc_out=. --doc_opt=markdown,README.md --govalidators_out=./pb/ task.proto"
 

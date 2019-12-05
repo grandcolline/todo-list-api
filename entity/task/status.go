@@ -9,13 +9,14 @@ import "fmt"
    - Complate 完了済み
  の2つの状態を持つ
 */
-type Status string
+type Status struct{ value string }
 
-const (
+// Enum
+var (
 	// Doing 作業中
-	Doing Status = "doing"
+	Doing Status = Status{value: "doing"}
 	// Complate 完了済み
-	Complate Status = "complate"
+	Complate Status = Status{value: "complate"}
 )
 
 // NewStatus はタスクステータスを生成する
@@ -35,7 +36,17 @@ func ToStatus(s string) (Status, error) {
 	}
 }
 
+// IsDoing は作業中かどうかを返す
+func (s Status) IsDoing() bool {
+	return s.value == Doing.value
+}
+
+// IsComplate は完了かどうかを返す
+func (s Status) IsComplate() bool {
+	return s.value == Complate.value
+}
+
 // String はタスクステータスをstringで返す
 func (s Status) String() string {
-	return string(s)
+	return s.value
 }

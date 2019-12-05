@@ -9,11 +9,11 @@ import (
  Description タスク詳細
  タスク詳細は300文字以内の文字列の値オブジェクト
 */
-type Description string
+type Description struct{ value string }
 
 // NewDescription はタスク詳細を生成する
 func NewDescription() Description {
-	return ""
+	return Description{value: ""}
 }
 
 // ToDescription はStringをタスク詳細に変換する
@@ -24,10 +24,10 @@ func ToDescription(s string) (Description, error) {
 		return NewDescription(), fmt.Errorf("convert error")
 	}
 
-	return Description(s), nil
+	return Description{value: s}, nil
 }
 
-// String はタスク名をstringで返す
+// String はタスク詳細をstringで返す
 func (d Description) String() string {
-	return string(d)
+	return d.value
 }

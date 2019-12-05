@@ -7,9 +7,8 @@ import (
 
 // TaskRepository タスクレポジトリ
 type TaskRepository interface {
-	Create(*entity.Task) error
+	Upsert(*entity.Task) error
 	ReadByID(task.ID) (*entity.Task, error)
-	Update(*entity.Task) error
 	Delete(*entity.Task) error
 	IsNotFound(error) bool
 }

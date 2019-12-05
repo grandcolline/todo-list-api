@@ -10,23 +10,22 @@ import (
 
 // TaskUsecase タスクユースケース
 type TaskUsecase struct {
-	TaskRepo repository.TaskRepository
+	taskRepo repository.TaskRepository
 	// Log      logger.Logger
 }
 
 // NewTaskUsecase はタスクユースケースを作成する
 func NewTaskUsecase(repo repository.TaskRepository) *TaskUsecase {
 	return &TaskUsecase{
-		TaskRepo: repo,
+		taskRepo: repo,
 	}
 }
 
 // GetByID はIDでタスクを取得する
 func (tu *TaskUsecase) GetByID(id task.ID) (*entity.Task, error) {
-	// tu.Log.Debug("get task. [id: " + id.String() + "]")
 
 	// タスクを取得
-	task, err := tu.TaskRepo.ReadByID(id)
+	task, err := tu.taskRepo.ReadByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +40,7 @@ func (tu *TaskUsecase) Create(name task.Name, des task.Description) (*entity.Tas
 	task.Update(name, des)
 
 	// 永続化
-	if err := tu.TaskRepo.Create(task); err != nil {
+	if err := tu.taskRepo.Upsert(task); err != nil {
 		return nil, err
 	}
 
@@ -49,28 +48,28 @@ func (tu *TaskUsecase) Create(name task.Name, des task.Description) (*entity.Tas
 }
 
 // Update はタスクを更新する
-func (tu *TaskUsecase) Update(id task.ID, name task.Name, des task.Description) (*entity.Task, error) {
+func (tu *TaskUsecase) Update(id task.ID, name task.Name, des task.Description) error {
 	// タスクを取得
-	task, err := tu.TaskRepo.ReadByID(id)
+	task, err := tu.taskRepo.ReadByID(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// タスク更新
 	task.Update(name, des)
 
 	// 永続化
-	if err := tu.TaskRepo.Update(task); err != nil {
-		return nil, err
+	if err := tu.taskRepo.Upsert(task); err != nil {
+		return err
 	}
 
-	return task, nil
+	return nil
 }
 
 // Complate はタスクを完了にする
 func (tu *TaskUsecase) Complate(id task.ID) error {
 	// タスクを取得
-	task, err := tu.TaskRepo.ReadByID(id)
+	task, err := tu.taskRepo.ReadByID(id)
 	if err != nil {
 		return err
 	}
@@ -81,7 +80,7 @@ func (tu *TaskUsecase) Complate(id task.ID) error {
 	}
 
 	// 永続化
-	if err := tu.TaskRepo.Update(task); err != nil {
+	if err := tu.taskRepo.Upsert(task); err != nil {
 		return err
 	}
 

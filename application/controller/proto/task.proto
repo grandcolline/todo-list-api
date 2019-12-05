@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/empty.proto";
+// import "github.com/mwitkow/go-proto-validators/validator.proto";
+
+service TaskService {
+  // タスク取得
+  rpc GetTask (GetTaskRequest) returns (Task) {}
+  // タスク登録
+  rpc CreateTask (CreateTaskRequest) returns (Task) {}
+  // タスク更新
+  rpc UpdateTask (UpdateTaskRequest) returns (google.protobuf.Empty) {}
+  // タスク完了
+  rpc CompleteTask (CompleteTaskRequest) returns (google.protobuf.Empty) {}
+}
+
+// ステータス
+enum Status {
+  DOING    = 0;
+  COMPLETE = 1;
+}
+
+// タスクの共通メッセージ
+message Task {
+  string ID          = 1;
+  string Name        = 2;
+  string Description = 3;
+  Status Status      = 4;
+}
+
+// タスク取得のリクエストメッセージ
+message GetTaskRequest {
+  string ID = 1;
+}
+
+// タスク登録のリクエストメッセージ
+message CreateTaskRequest {
+  string Name        = 1;
+  string Description = 2;
+}
+
+// タスク更新のリクエストメッセージ
+message UpdateTaskRequest {
+  string ID          = 1;
+  string Name        = 2;
+  string Description = 3;
+}
+
+// タスク完了のリクエストメッセージ
+message CompleteTaskRequest {
+  string ID = 1;
+}
+

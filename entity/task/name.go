@@ -9,14 +9,14 @@ import (
  Name タスク名
  タスク名は1文字以上50文字以内の文字列の値オブジェクト
 */
-type Name string
+type Name struct{ value string }
 
 // NewName はタスク名を生成する
 func NewName() Name {
-	return Name("New Task")
+	return Name{value: "New Task"}
 }
 
-// ToName はStringをタスク名に変換する.
+// ToName はStringをタスク名に変換する
 func ToName(s string) (Name, error) {
 	// 空文字チェック
 	if s == "" {
@@ -29,10 +29,10 @@ func ToName(s string) (Name, error) {
 		return NewName(), fmt.Errorf("convert error")
 	}
 
-	return Name(s), nil
+	return Name{value: s}, nil
 }
 
 // String はタスク名をstringを返す
 func (n Name) String() string {
-	return string(n)
+	return n.value
 }

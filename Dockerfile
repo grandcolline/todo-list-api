@@ -29,6 +29,7 @@ RUN go mod download
 COPY . .
 RUN env CGO_ENABLED=0 go install
 
+
 # ------------------------
 # Runtime Stage
 # ------------------------

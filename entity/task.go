@@ -7,7 +7,7 @@ import (
 	"github.com/grandcolline/todo-list-api/entity/task"
 )
 
-// Task タスクエンティティ
+// Task TaskEntity
 type Task struct {
 	ID          task.ID          // タスクID
 	Name        task.Name        // タスク名
@@ -17,7 +17,7 @@ type Task struct {
 	UpdatedAt   time.Time        // 更新日時
 }
 
-// NewTask はタスクエンティティの初期化をする
+// NewTask はタスクの初期化をする
 func NewTask() *Task {
 	return &Task{
 		ID:          task.NewID(),
@@ -29,19 +29,21 @@ func NewTask() *Task {
 	}
 }
 
-// Update はタスクエンティティを更新する
+// Update はタスクを更新する
 func (t *Task) Update(name task.Name, des task.Description) {
 	t.Name = name
 	t.Description = des
-	t.CreatedAt = time.Now()
-	return
+	t.UpdatedAt = time.Now()
 }
 
-// Complate はタスクエンティティを完了にする
+// Complate はタスクを完了にする
 func (t *Task) Complate() error {
-	if t.Status == task.Complate {
-		return errors.New("complated")
+	// doingのものしか完了にできない
+	if !t.Status.IsDoing() {
+		// FIXME: error handling
+		return errors.New("not doing")
 	}
+
 	t.Status = task.Complate
 	t.UpdatedAt = time.Now()
 	return nil
