@@ -18,38 +18,51 @@ service TaskService {
 
 // ステータス
 enum Status {
+  // DOING 作業中
   DOING    = 0;
+  // COMPLETE 完了
   COMPLETE = 1;
 }
 
 // タスクの共通メッセージ
 message Task {
-  string ID          = 1;
-  string Name        = 2;
+  // タスクID
+  string ID = 1;
+  // タスク名
+  string Name = 2;
+  // タスク詳細
   string Description = 3;
-  Status Status      = 4;
+  // タスクステータス
+  Status Status = 4;
 }
 
 // タスク取得のリクエストメッセージ
 message GetTaskRequest {
+  // タスクID
   string ID = 1;
 }
 
 // タスク登録のリクエストメッセージ
 message CreateTaskRequest {
+  // タスク名
   string Name        = 1;
+  // タスク詳細
   string Description = 2;
 }
 
 // タスク更新のリクエストメッセージ
 message UpdateTaskRequest {
+  // タスクID
   string ID          = 1;
+  // タスク名
   string Name        = 2;
+  // タスク詳細
   string Description = 3;
 }
 
 // タスク完了のリクエストメッセージ
 message CompleteTaskRequest {
+  // タスクID
   string ID = 1;
 }
 

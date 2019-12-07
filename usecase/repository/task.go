@@ -9,6 +9,5 @@ import (
 type TaskRepository interface {
 	Upsert(*entity.Task) error
 	ReadByID(task.ID) (*entity.Task, error)
-	Delete(*entity.Task) error
-	IsNotFound(error) bool
+	Delete(task.ID) error
 }

@@ -35,5 +35,5 @@ RUN env CGO_ENABLED=0 go install
 # ------------------------
 FROM gcr.io/distroless/static as run
 
-COPY --from=build /go/bin/todo-list-api /todo-list-api
+COPY --from=dev /go/bin/todo-list-api /todo-list-api
 CMD ["/todo-list-api"]

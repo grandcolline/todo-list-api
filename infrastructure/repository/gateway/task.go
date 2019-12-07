@@ -38,7 +38,7 @@ func (tg *TaskGateway) Upsert(task *entity.Task) error {
 	return nil
 }
 
-// ReadByID .
+// ReadByID タスクをIDで取得する
 func (tg *TaskGateway) ReadByID(taskID task.ID) (*entity.Task, error) {
 	var tc collection.TaskCollection
 	snapshot, err := tg.cli.Collection(tc.CollectionName()).Doc(taskID.String()).Get(tg.ctx)
@@ -52,12 +52,12 @@ func (tg *TaskGateway) ReadByID(taskID task.ID) (*entity.Task, error) {
 	return tc.ToEntity(taskID.String())
 }
 
-// Delete .
-func (tg *TaskGateway) Delete(*entity.Task) error {
+// Delete タスクを削除する
+func (tg *TaskGateway) Delete(taskID task.ID) error {
+	var tc collection.TaskCollection
+	_, err := tg.cli.Collection(tc.CollectionName()).Doc(taskID.String()).Delete(tg.ctx)
+	if err != nil {
+		return err
+	}
 	return nil
-}
-
-// IsNotFound .
-func (tg *TaskGateway) IsNotFound(error) bool {
-	return false
 }

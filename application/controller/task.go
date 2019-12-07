@@ -13,13 +13,13 @@ import (
 
 // TaskController タスクコントローラ
 type TaskController struct {
-	taskUc *usecase.TaskUsecase
+	memberUc *usecase.MemberUsecase
 }
 
 // NewTaskController はタスクコントローラを作成する
-func NewTaskController(repo repository.TaskRepository) *TaskController {
+func NewTaskController(taskRepo repository.TaskRepository) *TaskController {
 	return &TaskController{
-		taskUc: usecase.NewTaskUsecase(repo),
+		memberUc: usecase.NewMemberUsecase(taskRepo),
 	}
 }
 
@@ -30,7 +30,7 @@ func (tc *TaskController) GetTask(c context.Context, p *pb.GetTaskRequest) (*pb.
 		// FIXME: error handling
 		return nil, err
 	}
-	taskEnt, err := tc.taskUc.GetByID(id)
+	taskEnt, err := tc.memberUc.GetByID(id)
 	if err != nil {
 		// FIXME: error handling
 		return nil, err
@@ -40,6 +40,7 @@ func (tc *TaskController) GetTask(c context.Context, p *pb.GetTaskRequest) (*pb.
 
 // CreateTask タスク登録
 func (tc *TaskController) CreateTask(c context.Context, p *pb.CreateTaskRequest) (*pb.Task, error) {
+	// 型変換
 	name, err := task.ToName(p.Name)
 	if err != nil {
 		// FIXME: error handling
@@ -50,11 +51,15 @@ func (tc *TaskController) CreateTask(c context.Context, p *pb.CreateTaskRequest)
 		// FIXME: error handling
 		return nil, err
 	}
-	taskEnt, err := tc.taskUc.Create(name, des)
+
+	// Usecaseの呼び出し
+	taskEnt, err := tc.memberUc.Create(name, des)
 	if err != nil {
 		// FIXME: error handling
 		return nil, err
 	}
+
+	// response
 	return convTask(taskEnt), nil
 }
 
@@ -75,7 +80,7 @@ func (tc *TaskController) UpdateTask(c context.Context, p *pb.UpdateTaskRequest)
 		// FIXME: error handling
 		return nil, err
 	}
-	if err := tc.taskUc.Update(id, name, des); err != nil {
+	if err := tc.memberUc.Update(id, name, des); err != nil {
 		// FIXME: error handling
 		return nil, err
 	}
@@ -89,14 +94,14 @@ func (tc *TaskController) CompleteTask(c context.Context, p *pb.CompleteTaskRequ
 		// FIXME: error handling
 		return nil, err
 	}
-	if err := tc.taskUc.Complate(id); err != nil {
+	if err := tc.memberUc.Complate(id); err != nil {
 		// FIXME: error handling
 		return nil, err
 	}
 	return &empty.Empty{}, nil
 }
 
-// タスクエンティティをタスク共通メッセージに変換します
+// convTask タスクエンティティをタスク共通メッセージに変換します
 func convTask(e *entity.Task) *pb.Task {
 	return &pb.Task{
 		ID:          e.ID.String(),
@@ -106,7 +111,7 @@ func convTask(e *entity.Task) *pb.Task {
 	}
 }
 
-// ステータスをenumに変換
+// convStatus ステータスをenumに変換
 func convStatus(s task.Status) pb.Status {
 	switch s {
 	case task.Complate:

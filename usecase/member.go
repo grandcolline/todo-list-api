@@ -8,24 +8,24 @@ import (
 	"github.com/grandcolline/todo-list-api/usecase/repository"
 )
 
-// TaskUsecase タスクユースケース
-type TaskUsecase struct {
+// MemberUsecase メンバーユースケース
+type MemberUsecase struct {
 	taskRepo repository.TaskRepository
 	// Log      logger.Logger
 }
 
-// NewTaskUsecase はタスクユースケースを作成する
-func NewTaskUsecase(repo repository.TaskRepository) *TaskUsecase {
-	return &TaskUsecase{
-		taskRepo: repo,
+// NewMemberUsecase はメンバーユースケースを作成する
+func NewMemberUsecase(taskRepo repository.TaskRepository) *MemberUsecase {
+	return &MemberUsecase{
+		taskRepo: taskRepo,
 	}
 }
 
 // GetByID はIDでタスクを取得する
-func (tu *TaskUsecase) GetByID(id task.ID) (*entity.Task, error) {
+func (mu *MemberUsecase) GetByID(id task.ID) (*entity.Task, error) {
 
 	// タスクを取得
-	task, err := tu.taskRepo.ReadByID(id)
+	task, err := mu.taskRepo.ReadByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,13 +34,13 @@ func (tu *TaskUsecase) GetByID(id task.ID) (*entity.Task, error) {
 }
 
 // Create はタスクを登録する
-func (tu *TaskUsecase) Create(name task.Name, des task.Description) (*entity.Task, error) {
+func (mu *MemberUsecase) Create(name task.Name, des task.Description) (*entity.Task, error) {
 	// タスクを作成
 	task := entity.NewTask()
 	task.Update(name, des)
 
 	// 永続化
-	if err := tu.taskRepo.Upsert(task); err != nil {
+	if err := mu.taskRepo.Upsert(task); err != nil {
 		return nil, err
 	}
 
@@ -48,9 +48,9 @@ func (tu *TaskUsecase) Create(name task.Name, des task.Description) (*entity.Tas
 }
 
 // Update はタスクを更新する
-func (tu *TaskUsecase) Update(id task.ID, name task.Name, des task.Description) error {
+func (mu *MemberUsecase) Update(id task.ID, name task.Name, des task.Description) error {
 	// タスクを取得
-	task, err := tu.taskRepo.ReadByID(id)
+	task, err := mu.taskRepo.ReadByID(id)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (tu *TaskUsecase) Update(id task.ID, name task.Name, des task.Description) 
 	task.Update(name, des)
 
 	// 永続化
-	if err := tu.taskRepo.Upsert(task); err != nil {
+	if err := mu.taskRepo.Upsert(task); err != nil {
 		return err
 	}
 
@@ -67,9 +67,9 @@ func (tu *TaskUsecase) Update(id task.ID, name task.Name, des task.Description) 
 }
 
 // Complate はタスクを完了にする
-func (tu *TaskUsecase) Complate(id task.ID) error {
+func (mu *MemberUsecase) Complate(id task.ID) error {
 	// タスクを取得
-	task, err := tu.taskRepo.ReadByID(id)
+	task, err := mu.taskRepo.ReadByID(id)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (tu *TaskUsecase) Complate(id task.ID) error {
 	}
 
 	// 永続化
-	if err := tu.taskRepo.Upsert(task); err != nil {
+	if err := mu.taskRepo.Upsert(task); err != nil {
 		return err
 	}
 

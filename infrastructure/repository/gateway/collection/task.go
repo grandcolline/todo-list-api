@@ -38,7 +38,7 @@ func (tc *TaskCollection) ToEntity(id string) (*entity.Task, error) {
 	des, err := task.ToDescription(tc.Description)
 	status, err := task.ToStatus(tc.Status)
 	if err != nil {
-		// FIXME
+		// FIXME: error handling
 		return nil, err
 	}
 
