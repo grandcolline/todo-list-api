@@ -1,8 +1,9 @@
 package task
 
 import (
-	"fmt"
 	"unicode/utf8"
+
+	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
 /*
@@ -20,14 +21,13 @@ func NewDescription() Description {
 func ToDescription(s string) (Description, error) {
 	// 文字数チェック
 	if utf8.RuneCountInString(s) > 300 {
-		// FIXME: エラーの共通化
-		return NewDescription(), fmt.Errorf("convert error")
+		return Description{}, errors.New(errors.BadParams, "failed to convert task.description: over 300")
 	}
 
 	return Description{value: s}, nil
 }
 
 // String はタスク詳細をstringで返す
-func (d Description) String() string {
+func (d *Description) String() string {
 	return d.value
 }

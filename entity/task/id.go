@@ -1,6 +1,9 @@
 package task
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"github.com/grandcolline/todo-list-api/util/errors"
+)
 
 // ID タスクID
 type ID struct{ value uuid.UUID }
@@ -13,11 +16,13 @@ func NewID() ID {
 // ToID はstringをタスクIDに変換する
 func ToID(s string) (ID, error) {
 	uuid, err := uuid.Parse(s)
-	// FIXME: errのラップはしなくても大丈夫か検討
-	return ID{value: uuid}, err
+	if err != nil {
+		return ID{}, errors.Errorf(errors.BadParams, "failed to convert task.id: %s", err)
+	}
+	return ID{value: uuid}, nil
 }
 
 // String はタスクIDをstringで返す
-func (id ID) String() string {
+func (id *ID) String() string {
 	return uuid.UUID(id.value).String()
 }

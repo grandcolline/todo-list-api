@@ -1,10 +1,10 @@
 package entity
 
 import (
-	"errors"
 	"time"
 
 	"github.com/grandcolline/todo-list-api/entity/task"
+	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
 // Task TaskEntity
@@ -40,8 +40,7 @@ func (t *Task) Update(name task.Name, des task.Description) {
 func (t *Task) Complate() error {
 	// doingのものしか完了にできない
 	if !t.Status.IsDoing() {
-		// FIXME: error handling
-		return errors.New("not doing")
+		return errors.New(errors.BadParams, "failed to completing task: status is not doing")
 	}
 
 	t.Status = task.Complate

@@ -8,6 +8,7 @@ import (
 	"github.com/grandcolline/todo-list-api/entity/task"
 	"github.com/grandcolline/todo-list-api/infrastructure/repository/gateway/collection"
 	"github.com/grandcolline/todo-list-api/usecase/repository"
+	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
 // TaskGateway タスクレポジトリ実装
@@ -32,7 +33,7 @@ func (tg *TaskGateway) Upsert(task *entity.Task) error {
 
 	// FireStoreに保存
 	if _, err := tg.cli.Collection(tc.CollectionName()).Doc(id).Set(tg.ctx, tc); err != nil {
-		return err
+		return errors.Errorf(errors.Database, "failed to upsert task: %s", err)
 	}
 
 	return nil
@@ -43,11 +44,11 @@ func (tg *TaskGateway) ReadByID(taskID task.ID) (*entity.Task, error) {
 	var tc collection.TaskCollection
 	snapshot, err := tg.cli.Collection(tc.CollectionName()).Doc(taskID.String()).Get(tg.ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Errorf(errors.Database, "failed to read by id task: %s", err)
 	}
 
 	if err = snapshot.DataTo(&tc); err != nil {
-		return nil, err
+		return nil, errors.Errorf(errors.Database, "failed to read by id task: %s", err)
 	}
 	return tc.ToEntity(taskID.String())
 }

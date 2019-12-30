@@ -1,8 +1,9 @@
 package task
 
 import (
-	"fmt"
 	"unicode/utf8"
+
+	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
 /*
@@ -20,13 +21,11 @@ func NewName() Name {
 func ToName(s string) (Name, error) {
 	// 空文字チェック
 	if s == "" {
-		// FIXME: エラーの共通化
-		return NewName(), fmt.Errorf("convert error")
+		return NewName(), errors.New(errors.BadParams, "failed to convert task.name: empty")
 	}
 	// 文字数チェック
 	if utf8.RuneCountInString(s) > 50 {
-		// FIXME: エラーの共通化
-		return NewName(), fmt.Errorf("convert error")
+		return NewName(), errors.New(errors.BadParams, "failed to convert task.name: over 50")
 	}
 
 	return Name{value: s}, nil

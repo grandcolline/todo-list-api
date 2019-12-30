@@ -1,6 +1,6 @@
 package task
 
-import "fmt"
+import "github.com/grandcolline/todo-list-api/util/errors"
 
 /*
  Status タスクステータス
@@ -32,7 +32,7 @@ func ToStatus(s string) (Status, error) {
 	case "Complate", "complate":
 		return Complate, nil
 	default:
-		return NewStatus(), fmt.Errorf("convert error")
+		return NewStatus(), errors.New(errors.BadParams, "failed to convert task.status: invalit")
 	}
 }
 
