@@ -13,13 +13,13 @@ import (
 
 // TaskController タスクコントローラ
 type TaskController struct {
-	memberUc *usecase.MemberUsecase
+	userUc *usecase.User
 }
 
 // NewTaskController はタスクコントローラを作成する
-func NewTaskController(taskRepo repository.TaskRepository) *TaskController {
+func NewTaskController(taskRepo repository.Task) *TaskController {
 	return &TaskController{
-		memberUc: usecase.NewMemberUsecase(taskRepo),
+		userUc: usecase.NewUser(taskRepo),
 	}
 }
 
@@ -30,7 +30,7 @@ func (tc *TaskController) GetTask(c context.Context, p *pb.GetTaskRequest) (*pb.
 		// FIXME: error handling
 		return nil, err
 	}
-	taskEnt, err := tc.memberUc.GetByID(id)
+	taskEnt, err := tc.userUc.GetByID(id)
 	if err != nil {
 		// FIXME: error handling
 		return nil, err
@@ -53,7 +53,7 @@ func (tc *TaskController) CreateTask(c context.Context, p *pb.CreateTaskRequest)
 	}
 
 	// Usecaseの呼び出し
-	taskEnt, err := tc.memberUc.Create(name, des)
+	taskEnt, err := tc.userUc.Create(name, des)
 	if err != nil {
 		// FIXME: error handling
 		return nil, err
@@ -80,7 +80,7 @@ func (tc *TaskController) UpdateTask(c context.Context, p *pb.UpdateTaskRequest)
 		// FIXME: error handling
 		return nil, err
 	}
-	if err := tc.memberUc.Update(id, name, des); err != nil {
+	if err := tc.userUc.Update(id, name, des); err != nil {
 		// FIXME: error handling
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (tc *TaskController) CompleteTask(c context.Context, p *pb.CompleteTaskRequ
 		// FIXME: error handling
 		return nil, err
 	}
-	if err := tc.memberUc.Complate(id); err != nil {
+	if err := tc.userUc.Complate(id); err != nil {
 		// FIXME: error handling
 		return nil, err
 	}

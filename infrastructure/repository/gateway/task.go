@@ -18,7 +18,7 @@ type TaskGateway struct {
 }
 
 // NewTaskGateway タスクレポジトリ実装を作成する
-func NewTaskGateway(cli *firestore.Client, ctx context.Context) repository.TaskRepository {
+func NewTaskGateway(cli *firestore.Client, ctx context.Context) repository.Task {
 	return &TaskGateway{
 		cli: cli,
 		ctx: ctx,
