@@ -42,8 +42,6 @@ services:
       - EVANS_HOST=app
       - EVANS_PORT=50051
       - EVANS_PROTO_FILE=task.proto
-    command: "evans --host app -p 50051 task.proto"
-    # command: "bash"
     depends_on:
       - app
 

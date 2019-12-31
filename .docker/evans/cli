@@ -1,0 +1,4 @@
+#!/bin/bash
+cmd="evans --host ${EVANS_HOST} -p ${EVANS_PORT} --package pb $1"
+echo "${cmd}"
+eval "${cmd}"

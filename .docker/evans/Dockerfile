@@ -1,6 +1,6 @@
 FROM debian:stretch
 
-ARG EVANS_VERSION=0.8.4
+ARG EVANS_VERSION=0.8.5
 
 RUN apt-get update && \
 	apt-get install -y wget && \
@@ -21,7 +21,6 @@ RUN mkdir -p github.com/mwitkow/go-proto-validators && \
 	wget https://raw.githubusercontent.com/mwitkow/go-proto-validators/master/validator.proto \
 		-O github.com/mwitkow/go-proto-validators/validator.proto
 
-# COPY entrypoint.sh .
+COPY cli /usr/local/bin/cli
 
-# ENTRYPOINT ["./entrypoint.sh"]
-# ENTRYPOINT ["evans"]
+ENTRYPOINT ["bash"]
