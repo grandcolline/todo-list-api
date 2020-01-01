@@ -13,24 +13,24 @@ type Status struct{ value string }
 
 // Enum
 var (
-	// Doing 作業中
-	Doing Status = Status{value: "doing"}
+	// DOING 作業中
+	DOING Status = Status{value: "doing"}
 	// Complate 完了済み
-	Complate Status = Status{value: "complate"}
+	COMPLATE Status = Status{value: "complate"}
 )
 
 // NewStatus はタスクステータスを生成する
 func NewStatus() Status {
-	return Doing
+	return DOING
 }
 
 // ToStatus はStringをタスクステータスに変換する
 func ToStatus(s string) (Status, error) {
 	switch s {
-	case "Doing", "doing":
-		return Doing, nil
-	case "Complate", "complate":
-		return Complate, nil
+	case "Doing", "doing", "DOING":
+		return DOING, nil
+	case "Complate", "complate", "COMPLATE":
+		return COMPLATE, nil
 	default:
 		return NewStatus(), errors.New(errors.BadParams, "failed to convert task.status: invalit")
 	}
@@ -38,12 +38,12 @@ func ToStatus(s string) (Status, error) {
 
 // IsDoing は作業中かどうかを返す
 func (s Status) IsDoing() bool {
-	return s.value == Doing.value
+	return s.value == DOING.value
 }
 
 // IsComplate は完了かどうかを返す
 func (s Status) IsComplate() bool {
-	return s.value == Complate.value
+	return s.value == COMPLATE.value
 }
 
 // String はタスクステータスをstringで返す

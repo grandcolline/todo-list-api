@@ -43,7 +43,7 @@ func (t *Task) Complate() error {
 		return errors.New(errors.BadParams, "failed to completing task: status is not doing")
 	}
 
-	t.Status = task.Complate
+	t.Status = task.COMPLATE
 	t.UpdatedAt = time.Now()
 	return nil
 }

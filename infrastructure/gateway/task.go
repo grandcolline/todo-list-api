@@ -6,7 +6,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/grandcolline/todo-list-api/entity"
 	"github.com/grandcolline/todo-list-api/entity/task"
-	"github.com/grandcolline/todo-list-api/infrastructure/repository/gateway/collection"
+	"github.com/grandcolline/todo-list-api/infrastructure/gateway/collection"
 	"github.com/grandcolline/todo-list-api/usecase/repository"
 	"github.com/grandcolline/todo-list-api/util/errors"
 )

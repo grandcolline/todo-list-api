@@ -4,25 +4,29 @@ import (
 	"github.com/grandcolline/todo-list-api/entity"
 	"github.com/grandcolline/todo-list-api/entity/task"
 
-	// "github.com/grandcolline/todo-list-api/usecase/logger"
+	"github.com/grandcolline/todo-list-api/usecase/logger"
 	"github.com/grandcolline/todo-list-api/usecase/repository"
 )
 
 // User ユーザユースケース
 type User struct {
 	taskRepo repository.Task
-	// Log      logger.Logger
+	log      logger.Logger
 }
 
 // NewUser はユーザユースケースを作成する
-func NewUser(taskRepo repository.Task) *User {
+// FIXME: ここで入れる引数ってポインタの方がいい？
+func NewUser(taskRepo repository.Task, log logger.Logger) *User {
 	return &User{
 		taskRepo: taskRepo,
+		log:      log,
 	}
 }
 
 // GetByID はIDでタスクを取得する
 func (u *User) GetByID(id task.ID) (*entity.Task, error) {
+
+	u.log.Debug("GetByID")
 
 	// タスクを取得
 	task, err := u.taskRepo.ReadByID(id)
