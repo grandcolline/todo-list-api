@@ -54,9 +54,6 @@ func (l *Log) Error(s string) {
 	l.output(s, errorLv)
 }
 
-// fakeTime テスト用時刻固定時間
-var fakeTime time.Time
-
 // output はログを整形して出力する
 func (l *Log) output(s string, lv level) {
 	// アウトプットレベルより小さい時は出力せずに終了
