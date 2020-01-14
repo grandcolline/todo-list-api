@@ -40,7 +40,7 @@ func (t *Task) Update(name task.Name, des task.Description) {
 func (t *Task) Complate() error {
 	// doingのものしか完了にできない
 	if !t.Status.IsDoing() {
-		return errors.New(errors.BadParams, "failed to completing task: status is not doing")
+		return errors.New(errors.BadParams, "failed to comple task. task.status is not doing")
 	}
 
 	t.Status = task.COMPLATE

@@ -33,7 +33,7 @@ func (tg *TaskGateway) Upsert(task *entity.Task) error {
 
 	// FireStoreに保存
 	if _, err := tg.cli.Collection(tc.CollectionName()).Doc(id).Set(tg.ctx, tc); err != nil {
-		return errors.Errorf(errors.Database, "failed to upsert task: %s", err)
+		return errors.New(errors.Database, "failed to upsert task("+id+"): "+err.Error())
 	}
 
 	return nil
@@ -44,11 +44,13 @@ func (tg *TaskGateway) ReadByID(taskID task.ID) (*entity.Task, error) {
 	var tc collection.TaskCollection
 	snapshot, err := tg.cli.Collection(tc.CollectionName()).Doc(taskID.String()).Get(tg.ctx)
 	if err != nil {
-		return nil, errors.Errorf(errors.Database, "failed to read by id task: %s", err)
+		// FIXME notFoundのハンドリング
+		return nil, errors.New(errors.Database, "failed to read by id task("+taskID.String()+"): "+err.Error())
 	}
 
 	if err = snapshot.DataTo(&tc); err != nil {
-		return nil, errors.Errorf(errors.Database, "failed to read by id task: %s", err)
+		// FIXME: 上と同じエラーじゃダメやない？
+		return nil, errors.New(errors.Database, "failed to read by id task("+taskID.String()+"): "+err.Error())
 	}
 	return tc.ToEntity(taskID.String())
 }
@@ -58,7 +60,7 @@ func (tg *TaskGateway) Delete(taskID task.ID) error {
 	var tc collection.TaskCollection
 	_, err := tg.cli.Collection(tc.CollectionName()).Doc(taskID.String()).Delete(tg.ctx)
 	if err != nil {
-		return err
+		return errors.New(errors.Database, "failed to delete task: "+err.Error())
 	}
 	return nil
 }

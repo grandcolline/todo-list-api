@@ -5,13 +5,13 @@ import "github.com/grandcolline/todo-list-api/util/errors"
 /*
  Status タスクステータス
  タスクステータスはタスクの状態を表す値オブジェクト
-   - Doing 作業中
-   - Complate 完了済み
+   - DOING:    作業中
+   - COMPLATE: 完了済み
  の2つの状態を持つ
 */
 type Status struct{ value string }
 
-// Enum
+// FIXME: ここvarなのでパッケージ外から変更可能だけど大丈夫？
 var (
 	// DOING 作業中
 	DOING Status = Status{value: "doing"}
@@ -19,20 +19,25 @@ var (
 	COMPLATE Status = Status{value: "complate"}
 )
 
+// DefaultStatus はタスクステータスのデフォルト値
+func DefaultStatus() Status {
+	return DOING
+}
+
 // NewStatus はタスクステータスを生成する
 func NewStatus() Status {
-	return DOING
+	return DefaultStatus()
 }
 
 // ToStatus はStringをタスクステータスに変換する
 func ToStatus(s string) (Status, error) {
 	switch s {
-	case "Doing", "doing", "DOING":
+	case DOING.String():
 		return DOING, nil
-	case "Complate", "complate", "COMPLATE":
+	case COMPLATE.String():
 		return COMPLATE, nil
 	default:
-		return NewStatus(), errors.New(errors.BadParams, "failed to convert task.status: invalit")
+		return Status{}, errors.NewConvErr("task.status", "invalit")
 	}
 }
 

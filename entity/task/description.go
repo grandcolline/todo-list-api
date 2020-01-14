@@ -1,27 +1,37 @@
 package task
 
 import (
+	"strconv"
 	"unicode/utf8"
 
 	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
-/*
- Description タスク詳細
- タスク詳細は300文字以内の文字列の値オブジェクト
-*/
+// Description タスク詳細
 type Description struct{ value string }
+
+// DefaultDescription タスク詳細のデフォルト値
+func DefaultDescription() Description {
+	return Description{value: ""}
+}
+
+const (
+	// MinDescriptionLen タスク詳細の最小文字数
+	MinDescriptionLen int = 0
+	// MaxDescriptionLen タスク詳細の最大文字数
+	MaxDescriptionLen int = 300
+)
 
 // NewDescription はタスク詳細を生成する
 func NewDescription() Description {
-	return Description{value: ""}
+	return DefaultDescription()
 }
 
 // ToDescription はStringをタスク詳細に変換する
 func ToDescription(s string) (Description, error) {
 	// 文字数チェック
-	if utf8.RuneCountInString(s) > 300 {
-		return Description{}, errors.New(errors.BadParams, "failed to convert task.description: over 300")
+	if utf8.RuneCountInString(s) > MaxDescriptionLen {
+		return Description{}, errors.NewConvErr("task.description", "over "+strconv.Itoa(MaxDescriptionLen))
 	}
 
 	return Description{value: s}, nil

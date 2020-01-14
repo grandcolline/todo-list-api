@@ -1,59 +1,71 @@
 package errors
 
 import (
+	"errors"
 	"fmt"
-
-	"github.com/pkg/errors"
+	"runtime"
+	"strconv"
 )
 
-type customError struct {
-	code Code
-	err  error
+type codeError struct {
+	code  Code
+	err   error
+	cause string
 }
 
-// New returns an error code and error witr the supplied message.
-// New returns nil if c is OK.
 func New(c Code, msg string) error {
 	if c == OK {
 		return nil
 	}
-	return customError{
-		code: c,
-		err:  errors.New(msg),
+	return &codeError{
+		code:  c,
+		err:   errors.New(msg),
+		cause: getCause(2),
 	}
 }
 
-// Errorf returns an error containing an error code and a description;
-// Errorf returns nil if c is OK.
-func Errorf(c Code, format string, a ...interface{}) error {
+func AddCode(c Code, format string, a ...interface{}) error {
 	if c == OK {
 		return nil
 	}
-	return customError{
-		code: c,
-		err:  errors.Errorf(format, a...),
+	return &codeError{
+		code:  c,
+		err:   fmt.Errorf(format, a...),
+		cause: getCause(2),
 	}
 }
 
-func (e customError) Error() string {
-	return fmt.Sprintf("Code: %s, Msg: %s", e.code, e.err)
+func Errorf(format string, a ...interface{}) error {
+	err := fmt.Errorf(format, a...)
+	return &codeError{
+		code:  GetCode(err),
+		err:   err,
+		cause: getCause(2),
+	}
 }
 
-// GetCode retirn error code.
-func GetCode(err error) Code {
-	if err == nil {
+func (e codeError) Error() string {
+	return e.err.Error() + " (" + e.cause + ")"
+}
+
+func Format(e error) string {
+	return fmt.Sprintf("Code: %s, Msg: %s", GetCode(e), e.Error())
+}
+
+func GetCode(e error) Code {
+	if e == nil {
 		return OK
 	}
-	if e, ok := err.(customError); ok {
-		return e.code
+	c := &codeError{}
+	if ok := errors.As(e, &c); ok {
+		return c.code
 	}
 	return Unknown
 }
 
-// StackTrace shows stacktrace. If error is not private error, this returns empty string.
-func StackTrace(err error) string {
-	if e, ok := err.(customError); ok {
-		return fmt.Sprintf("%+v\n", e.err)
+func getCause(skip int) string {
+	if _, filename, line, ok := runtime.Caller(skip); ok {
+		return filename + ":" + strconv.Itoa(line)
 	}
-	return ""
+	return "unknown"
 }

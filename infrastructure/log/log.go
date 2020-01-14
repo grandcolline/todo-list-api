@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/grandcolline/todo-list-api/usecase/logger"
@@ -14,28 +12,17 @@ import (
 // Log ロガー実装
 type Log struct {
 	tranID  string
-	outLv   level
+	level   level
 	fmtType fmtType
 	writer  io.Writer
 }
 
-// logMessage ログ表示内容
-type logMessage struct {
-	tranID    string
-	filename  string
-	line      int
-	message   string
-	level     level
-	timestamp time.Time
-}
-
 // NewLog ロガー実装を作成する.
-func NewLog(id, outLvStr, fmtTypeStr string, writer io.Writer) logger.Logger {
-
-	// TODO: トランザクションIDが空の場合のハンドリング
+func NewLog(id, levelStr, fmtTypeStr string, writer io.Writer) logger.Logger {
+	// FIXME: トランザクションIDが空の場合のハンドリング
 
 	// 出力レベルを取得
-	outLv, err := convLv(outLvStr)
+	level, err := convLv(levelStr)
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +33,7 @@ func NewLog(id, outLvStr, fmtTypeStr string, writer io.Writer) logger.Logger {
 	}
 	return &Log{
 		tranID:  id,
-		outLv:   outLv,
+		level:   level,
 		fmtType: fmtType,
 		writer:  writer,
 	}
@@ -73,40 +60,28 @@ var fakeTime time.Time
 // output はログを整形して出力する
 func (l *Log) output(s string, lv level) {
 	// アウトプットレベルより小さい時は出力せずに終了
-	if lv < l.outLv {
+	if lv < l.level {
 		return
 	}
 
-	_, filename, line, _ := runtime.Caller(2)
-
-	// コンテンツを作成
-	lm := logMessage{
-		tranID:    l.tranID,
-		timestamp: time.Now(),
-		level:     lv,
-		message:   s,
-		filename:  filename,
-		line:      line,
-	}
-
-	// format
-	var res string
+	// 整形して出力
 	switch l.fmtType {
-	case rowType:
-		res = fmt.Sprintf(
-			"%s [%s][%s](%s:%s) %s",
-			lm.timestamp.Format("2006/01/02 15:04:05"),
-			lm.level.string(),
-			lm.tranID,
-			lm.filename,
-			strconv.Itoa(lm.line),
-			lm.message,
-		)
-	case jsonType:
-		b, _ := json.Marshal(lm)
-		res = string(b)
+	case row:
+		fmt.Fprintln(l.writer, fmt.Sprintf(
+			"%s [%s][%s] %s",
+			time.Now().Format("2006/01/02 15:04:05"),
+			lv.string(),
+			l.tranID,
+			s,
+		))
+	case stackdriver:
+		entry := map[string]string{
+			"time":     time.Now().Format(time.RFC3339Nano),
+			"severity": lv.string(),
+			"message":  s,
+			"tranID":   l.tranID,
+		}
+		b, _ := json.Marshal(entry)
+		fmt.Fprintln(l.writer, string(b))
 	}
-
-	// output
-	fmt.Fprintln(l.writer, res)
 }

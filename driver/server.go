@@ -48,7 +48,7 @@ func Serve() {
 
 	// ロガーファクトリの作成
 	loggerFactory := func(id string) logger.Logger {
-		return log.NewLog(id, "debug", "row", os.Stdout)
+		return log.NewLog(id, "debug", "stackdriver", os.Stdout)
 	}
 
 	// タスクコントローラの作成
@@ -59,7 +59,7 @@ func Serve() {
 	go func() {
 		// FIXME: fmtでいいのか問題を検討(つーか、ログ出てないよねw
 		// log.Printf("start grpc Server port: %s", conf.Port)
-		fmt.Printf("start grpc Server port: %s", conf.Port)
+		fmt.Printf("start grpc Server port: %s\n", conf.Port)
 		server.Serve(lis)
 	}()
 

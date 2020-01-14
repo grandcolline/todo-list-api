@@ -36,19 +36,23 @@ func (tc *TaskCollection) FromEntity(t *entity.Task) string {
 func (tc *TaskCollection) ToEntity(id string) (*entity.Task, error) {
 	entID, err := task.ToID(id)
 	if err != nil {
-		return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
+		// return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
+		return nil, errors.Errorf("failed to task to entity: %s", err)
 	}
 	name, err := task.ToName(tc.Name)
 	if err != nil {
-		return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
+		// return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
+		return nil, errors.Errorf("failed to task to entity: %s", err)
 	}
 	des, err := task.ToDescription(tc.Description)
 	if err != nil {
-		return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
+		return nil, errors.Errorf("failed to task to entity: %s", err)
+		// return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
 	}
 	status, err := task.ToStatus(tc.Status)
 	if err != nil {
-		return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
+		return nil, errors.Errorf("failed to task to entity: %s", err)
+		// return nil, errors.Errorf(errors.BadParams, "failed to task to entity: %s", err)
 	}
 
 	return &entity.Task{

@@ -12,3 +12,5 @@ const (
 	Forbidden   Code = "forbidden"
 	Unknown     Code = "unknown"
 )
+
+func (c Code) String() string { return string(c) }

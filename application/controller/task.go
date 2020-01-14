@@ -10,38 +10,36 @@ import (
 	"github.com/grandcolline/todo-list-api/usecase"
 	"github.com/grandcolline/todo-list-api/usecase/logger"
 	"github.com/grandcolline/todo-list-api/usecase/repository"
+	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
 // TaskController タスクコントローラ
 type TaskController struct {
-	userUcFactory func(logger.Logger) *usecase.User
+	userUc        *usecase.User
 	loggerFactory func(string) logger.Logger
 }
 
 // NewTaskController はタスクコントローラを作成する
 func NewTaskController(taskRepo repository.Task, loggerFactory func(string) logger.Logger) *TaskController {
 	return &TaskController{
-		userUcFactory: func(log logger.Logger) *usecase.User {
-			return usecase.NewUser(taskRepo, log)
-		},
+		userUc:        usecase.NewUser(taskRepo),
 		loggerFactory: loggerFactory,
 	}
 }
 
 // GetTask タスク取得
 func (tc *TaskController) GetTask(c context.Context, p *pb.GetTaskRequest) (*pb.Task, error) {
-	// usecaseとloggerの作成
+	// loggerの作成
 	log := tc.loggerFactory("") // FIXME: IDをしっかり入れる
-	userUc := tc.userUcFactory(log)
 
 	id, err := task.ToID(p.ID)
 	if err != nil {
-		// FIXME: error handling
+		log.Error(errors.Format(err))
 		return nil, err
 	}
-	taskEnt, err := userUc.GetByID(id)
+	taskEnt, err := tc.userUc.GetByID(id)
 	if err != nil {
-		// FIXME: error handling
+		log.Error(errors.Format(err))
 		return nil, err
 	}
 	return convTask(taskEnt), nil
@@ -49,38 +47,36 @@ func (tc *TaskController) GetTask(c context.Context, p *pb.GetTaskRequest) (*pb.
 
 // CreateTask タスク登録
 func (tc *TaskController) CreateTask(c context.Context, p *pb.CreateTaskRequest) (*pb.Task, error) {
-	// usecaseとloggerの作成
+	// loggerの作成
 	log := tc.loggerFactory("") // FIXME: IDをしっかり入れる
-	userUc := tc.userUcFactory(log)
 
 	// 型変換
 	name, err := task.ToName(p.Name)
 	if err != nil {
-		// FIXME: error handling
+		log.Error(errors.Format(err))
 		return nil, err
 	}
 	des, err := task.ToDescription(p.Description)
 	if err != nil {
-		// FIXME: error handling
+		log.Error(errors.Format(err))
 		return nil, err
 	}
 
 	// Usecaseの呼び出し
-	taskEnt, err := userUc.Create(name, des)
+	taskEnt, err := tc.userUc.Create(name, des)
 	if err != nil {
-		// FIXME: error handling
 		return nil, err
 	}
 
 	// response
+	log.Info("task created. id: " + taskEnt.ID.String())
 	return convTask(taskEnt), nil
 }
 
 // UpdateTask タスク更新
 func (tc *TaskController) UpdateTask(c context.Context, p *pb.UpdateTaskRequest) (*empty.Empty, error) {
-	// usecaseとloggerの作成
-	log := tc.loggerFactory("") // FIXME: IDをしっかり入れる
-	userUc := tc.userUcFactory(log)
+	// loggerの作成
+	// log := tc.loggerFactory("") // FIXME: IDをしっかり入れる
 
 	id, err := task.ToID(p.ID)
 	if err != nil {
@@ -97,7 +93,7 @@ func (tc *TaskController) UpdateTask(c context.Context, p *pb.UpdateTaskRequest)
 		// FIXME: error handling
 		return nil, err
 	}
-	if err := userUc.Update(id, name, des); err != nil {
+	if err := tc.userUc.Update(id, name, des); err != nil {
 		// FIXME: error handling
 		return nil, err
 	}
@@ -106,16 +102,15 @@ func (tc *TaskController) UpdateTask(c context.Context, p *pb.UpdateTaskRequest)
 
 // CompleteTask タスク完了
 func (tc *TaskController) CompleteTask(c context.Context, p *pb.CompleteTaskRequest) (*empty.Empty, error) {
-	// usecaseとloggerの作成
-	log := tc.loggerFactory("") // FIXME: IDをしっかり入れる
-	userUc := tc.userUcFactory(log)
+	// loggerの作成
+	// log := tc.loggerFactory("") // FIXME: IDをしっかり入れる
 
 	id, err := task.ToID(p.ID)
 	if err != nil {
 		// FIXME: error handling
 		return nil, err
 	}
-	if err := userUc.Complate(id); err != nil {
+	if err := tc.userUc.Complate(id); err != nil {
 		// FIXME: error handling
 		return nil, err
 	}

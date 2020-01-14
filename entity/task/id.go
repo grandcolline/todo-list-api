@@ -17,7 +17,7 @@ func NewID() ID {
 func ToID(s string) (ID, error) {
 	uuid, err := uuid.Parse(s)
 	if err != nil {
-		return ID{}, errors.Errorf(errors.BadParams, "failed to convert task.id: %s", err)
+		return ID{}, errors.NewConvErr("task.id", err.Error())
 	}
 	return ID{value: uuid}, nil
 }

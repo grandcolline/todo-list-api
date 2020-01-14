@@ -2,21 +2,21 @@ package log
 
 import "fmt"
 
-// fmtType フォーマット形式 (row/json)
+// fmtType フォーマット形式
 type fmtType string
 
 const (
-	rowType  fmtType = "row"
-	jsonType fmtType = "json"
+	row         fmtType = "row"
+	stackdriver fmtType = "json"
 )
 
 // convFmtType はstringをフォーマット形式に変換する.
 func convFmtType(s string) (fmtType, error) {
 	switch s {
-	case "row", "ROW", "Row":
-		return rowType, nil
-	case "json", "JSON", "Json":
-		return jsonType, nil
+	case "row":
+		return row, nil
+	case "stackdriver":
+		return stackdriver, nil
 	default:
 		return "", fmt.Errorf("fmtType covert error: %s", s)
 	}

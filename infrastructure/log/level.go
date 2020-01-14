@@ -39,6 +39,6 @@ func (lv level) string() string {
 	}
 }
 
-func (lv level) MarshalJSON() ([]byte, error) {
+func (lv level) marshalJSON() ([]byte, error) {
 	return []byte(`"` + lv.string() + `"`), nil
 }

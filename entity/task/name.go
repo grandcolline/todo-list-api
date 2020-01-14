@@ -1,31 +1,40 @@
 package task
 
 import (
+	"strconv"
 	"unicode/utf8"
 
 	"github.com/grandcolline/todo-list-api/util/errors"
 )
 
-/*
- Name タスク名
- タスク名は1文字以上50文字以内の文字列の値オブジェクト
-*/
+// Name タスク名
 type Name struct{ value string }
+
+const (
+	// MinNameLen タスク名の最小文字数
+	MinNameLen int = 1
+	// MaxNameLen タスク名の最大文字数
+	MaxNameLen int = 50
+)
+
+// DefaultName はタスク名のデフォルト値を返す
+func DefaultName() Name {
+	return Name{value: "New Task"}
+}
 
 // NewName はタスク名を生成する
 func NewName() Name {
-	return Name{value: "New Task"}
+	return DefaultName()
 }
 
 // ToName はStringをタスク名に変換する
 func ToName(s string) (Name, error) {
-	// 空文字チェック
-	if s == "" {
-		return NewName(), errors.New(errors.BadParams, "failed to convert task.name: empty")
+	if MinNameLen < utf8.RuneCountInString(s) {
+		return Name{}, errors.NewConvErr("task.name", "less "+strconv.Itoa(MinNameLen))
 	}
 	// 文字数チェック
-	if utf8.RuneCountInString(s) > 50 {
-		return NewName(), errors.New(errors.BadParams, "failed to convert task.name: over 50")
+	if utf8.RuneCountInString(s) > MaxNameLen {
+		return Name{}, errors.NewConvErr("task.name", "over "+strconv.Itoa(MaxNameLen))
 	}
 
 	return Name{value: s}, nil
