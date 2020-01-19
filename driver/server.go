@@ -20,16 +20,33 @@ import (
 	"cloud.google.com/go/firestore"
 )
 
-// conf アプリケーション設定
-var conf config.AppConf
-
 // Serve はサーバの起動を行います
 func Serve() {
-	// 設定の読み込み
-	conf.Init()
+
+	// ロガーファクトリの作成
+	var logConf config.LogConf
+	logConf.Init()
+	loggerFactory := func(id string) logger.Logger {
+		return log.NewLog(id, logConf.Level, logConf.Type, os.Stdout)
+	}
+
+	// DB接続の設定
+	var firestoreConf config.FirestoreConf
+	firestoreConf.Init()
+	ctx := context.Background()
+	cli, err := firestore.NewClient(ctx, firestoreConf.ProjectID)
+	taskGateway := gateway.NewTaskGateway(cli, ctx)
+
+
+	// タスクコントローラの作成
+	taskController := controller.NewTaskController(taskGateway, loggerFactory)
+
+	// アプリケーション設定の読み込み
+	var appConf config.AppConf
+	appConf.Init()
 
 	// ListenPortの作成
-	lis, err := net.Listen("tcp", ":"+conf.Port)
+	lis, err := net.Listen("tcp", ":"+appConf.Port)
 	if err != nil {
 		// FIXME: どうにかする
 		// log.Fatalf("faild to listen port: %v", err)
@@ -41,25 +58,12 @@ func Serve() {
 		)),
 	)
 
-	// DB接続の設定
-	ctx := context.Background()
-	cli, err := firestore.NewClient(ctx, "project-test")
-	taskGateway := gateway.NewTaskGateway(cli, ctx)
-
-	// ロガーファクトリの作成
-	loggerFactory := func(id string) logger.Logger {
-		return log.NewLog(id, "debug", "row", os.Stdout)
-	}
-
-	// タスクコントローラの作成
-	taskController := controller.NewTaskController(taskGateway, loggerFactory)
-
 	pb.RegisterTaskServiceServer(server, taskController)
 
 	go func() {
 		// FIXME: fmtでいいのか問題を検討(つーか、ログ出てないよねw
 		// log.Printf("start grpc Server port: %s", conf.Port)
-		fmt.Printf("start grpc Server port: %s\n", conf.Port)
+		fmt.Printf("start grpc Server port: %s\n", appConf.Port)
 		server.Serve(lis)
 	}()
 

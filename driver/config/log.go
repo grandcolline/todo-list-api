@@ -1,10 +1,6 @@
 package config
 
-import (
-	"log"
-
-	"github.com/kelseyhightower/envconfig"
-)
+import "github.com/kelseyhightower/envconfig"
 
 // LogConf ログの設定
 type LogConf struct {
@@ -12,10 +8,10 @@ type LogConf struct {
 	Level string `default:"debug"` // ログレベル（dubug/info/error）
 }
 
-// Init アプリケーション全体設定を環境変数から取得します
+// Init ログ設定を環境変数から取得します
 func (conf *LogConf) Init() {
 	err := envconfig.Process("log", conf)
 	if err != nil {
-		log.Fatal(err.Error())
+		panic("LogConf processing error: "+err.Error())
 	}
 }

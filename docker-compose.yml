@@ -27,7 +27,7 @@ services:
     build:
       context: .docker/firestore
     environment:
-      - FIRESTORE_PROJECT_ID=todo-list-api
+      - FIRESTORE_PROJECT_ID=todo
       - FIRESTORE_PORT=8081
     ports:
       - "8081:8081"

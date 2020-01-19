@@ -1,10 +1,6 @@
 package config
 
-import (
-	"log"
-
-	"github.com/kelseyhightower/envconfig"
-)
+import "github.com/kelseyhightower/envconfig"
 
 // AppConf アプリケーション全体の設定
 type AppConf struct {
@@ -16,6 +12,6 @@ type AppConf struct {
 func (conf *AppConf) Init() {
 	err := envconfig.Process("app", conf)
 	if err != nil {
-		log.Fatal(err.Error())
+		panic("AppConf processing error: "+err.Error())
 	}
 }
