@@ -12,6 +12,6 @@ type AppConf struct {
 func (conf *AppConf) Init() {
 	err := envconfig.Process("app", conf)
 	if err != nil {
-		panic("AppConf processing error: "+err.Error())
+		panic("AppConf processing error: " + err.Error())
 	}
 }

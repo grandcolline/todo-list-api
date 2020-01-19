@@ -12,6 +12,6 @@ type LogConf struct {
 func (conf *LogConf) Init() {
 	err := envconfig.Process("log", conf)
 	if err != nil {
-		panic("LogConf processing error: "+err.Error())
+		panic("LogConf processing error: " + err.Error())
 	}
 }

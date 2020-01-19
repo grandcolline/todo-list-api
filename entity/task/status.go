@@ -1,6 +1,9 @@
 package task
 
-import "github.com/grandcolline/todo-list-api/util/errors"
+import (
+	"github.com/grandcolline/todo-list-api/util/errors"
+	"github.com/grandcolline/todo-list-api/util/errors/errfmt"
+)
 
 /*
  Status タスクステータス
@@ -37,7 +40,7 @@ func ToStatus(s string) (Status, error) {
 	case COMPLATE.String():
 		return COMPLATE, nil
 	default:
-		return Status{}, errors.NewConvErr("task.status", "invalit")
+		return Status{}, errors.NewFromFmt(errfmt.Conv, "task.status", "invalit")
 	}
 }
 

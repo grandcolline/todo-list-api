@@ -37,7 +37,6 @@ func Serve() {
 	cli, err := firestore.NewClient(ctx, firestoreConf.ProjectID)
 	taskGateway := gateway.NewTaskGateway(cli, ctx)
 
-
 	// タスクコントローラの作成
 	taskController := controller.NewTaskController(taskGateway, loggerFactory)
 

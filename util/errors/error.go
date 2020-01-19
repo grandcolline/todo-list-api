@@ -5,16 +5,19 @@ import (
 	"fmt"
 	"runtime"
 	"strconv"
+
+	"github.com/grandcolline/todo-list-api/util/errors/code"
+	"github.com/grandcolline/todo-list-api/util/errors/errfmt"
 )
 
 type codeError struct {
-	code  Code
+	code  code.Code
 	err   error
 	cause string
 }
 
-func New(c Code, msg string) error {
-	if c == OK {
+func New(c code.Code, msg string) error {
+	if c == code.OK {
 		return nil
 	}
 	return &codeError{
@@ -24,8 +27,19 @@ func New(c Code, msg string) error {
 	}
 }
 
-func AddCode(c Code, format string, a ...interface{}) error {
-	if c == OK {
+func NewFromFmt(f errfmt.ErrFmt, a ...interface{}) error {
+	if f.Code == code.OK {
+		return nil
+	}
+	return &codeError{
+		code:  f.Code,
+		err:   fmt.Errorf(f.Str, a...),
+		cause: getCause(2),
+	}
+}
+
+func AddCode(c code.Code, format string, a ...interface{}) error {
+	if c == code.OK {
 		return nil
 	}
 	return &codeError{
@@ -52,15 +66,15 @@ func Format(e error) string {
 	return fmt.Sprintf("Code: %s, Msg: %s", GetCode(e), e.Error())
 }
 
-func GetCode(e error) Code {
+func GetCode(e error) code.Code {
 	if e == nil {
-		return OK
+		return code.OK
 	}
 	c := &codeError{}
 	if ok := errors.As(e, &c); ok {
 		return c.code
 	}
-	return Unknown
+	return code.Unknown
 }
 
 func getCause(skip int) string {

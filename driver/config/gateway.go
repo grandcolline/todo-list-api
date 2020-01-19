@@ -18,6 +18,6 @@ type FirestoreConf struct {
 func (conf *FirestoreConf) Init() {
 	err := envconfig.Process("firestore", conf)
 	if err != nil {
-		panic("GatewayConf processing error: "+err.Error())
+		panic("GatewayConf processing error: " + err.Error())
 	}
 }
