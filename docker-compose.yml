@@ -7,7 +7,8 @@ services:
     build:
       context: .
       target: dev
-    command: realize start
+      # command: realize start
+    command: air
     volumes:
       - ".:/go/src/github.com/grandcolline/todo-list-api"
       # --- exclude volums ---

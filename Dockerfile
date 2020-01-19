@@ -5,7 +5,7 @@ ARG GO_VERSION=latest
 # ------------------------
 FROM golang:${GO_VERSION} as dev
 
-ARG REALIZE_VERSION=v2.0.2
+ARG AIR_VERSION=v1.12.0
 ARG GOLANGCI_VERSION=v1.18.0
 
 ENV GOOS=linux
@@ -14,11 +14,10 @@ ENV GO111MODULE=on
 # install development tools
 WORKDIR $GOPATH/src/tools
 RUN go get \
-	gopkg.in/urfave/cli.v2@master \
-	github.com/oxequa/realize@${REALIZE_VERSION} \
+	github.com/cosmtrek/air@${AIR_VERSION} \
 	golang.org/x/tools/cmd/goimports@latest \
-	github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION}
-RUN rm -rf /go/pkg && rm -rf /go/src/*
+	github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANGCI_VERSION} \
+	&& rm -rf /go/pkg && rm -rf /go/src/*
 
 WORKDIR $GOPATH/src/github.com/grandcolline/todo-list-api
 

@@ -29,11 +29,11 @@ func NewName() Name {
 
 // ToName はStringをタスク名に変換する
 func ToName(s string) (Name, error) {
-	if MinNameLen < utf8.RuneCountInString(s) {
+	// 文字数チェック
+	if utf8.RuneCountInString(s) < MinNameLen {
 		return Name{}, errors.NewConvErr("task.name", "less "+strconv.Itoa(MinNameLen))
 	}
-	// 文字数チェック
-	if utf8.RuneCountInString(s) > MaxNameLen {
+	if MaxNameLen < utf8.RuneCountInString(s) {
 		return Name{}, errors.NewConvErr("task.name", "over "+strconv.Itoa(MaxNameLen))
 	}
 

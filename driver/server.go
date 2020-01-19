@@ -33,7 +33,7 @@ func Serve() {
 	if err != nil {
 		// FIXME: どうにかする
 		// log.Fatalf("faild to listen port: %v", err)
-		panic("faild to listen port: %v")
+		panic("faild to listen port: " + err.Error())
 	}
 	server := grpc.NewServer(
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
@@ -48,7 +48,7 @@ func Serve() {
 
 	// ロガーファクトリの作成
 	loggerFactory := func(id string) logger.Logger {
-		return log.NewLog(id, "debug", "stackdriver", os.Stdout)
+		return log.NewLog(id, "debug", "row", os.Stdout)
 	}
 
 	// タスクコントローラの作成
