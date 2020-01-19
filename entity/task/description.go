@@ -4,7 +4,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/grandcolline/todo-list-api/util/errors"
-	"github.com/grandcolline/todo-list-api/util/errors/errfmt"
 )
 
 // Description タスク詳細
@@ -31,7 +30,7 @@ func NewDescription() Description {
 func ToDescription(s string) (Description, error) {
 	// 文字数チェック
 	if utf8.RuneCountInString(s) > MaxDescriptionLen {
-		return Description{}, errors.NewFromFmt(errfmt.Conv, "task.description", "over max length")
+		return Description{}, errors.NewFromFmt(errors.Conv, "task.description", "over max length")
 	}
 
 	return Description{value: s}, nil

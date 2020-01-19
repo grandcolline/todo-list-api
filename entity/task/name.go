@@ -4,7 +4,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/grandcolline/todo-list-api/util/errors"
-	"github.com/grandcolline/todo-list-api/util/errors/errfmt"
 )
 
 // Name タスク名
@@ -31,10 +30,10 @@ func NewName() Name {
 func ToName(s string) (Name, error) {
 	// 文字数チェック
 	if utf8.RuneCountInString(s) < MinNameLen {
-		return Name{}, errors.NewFromFmt(errfmt.Conv, "task.name", "less min length")
+		return Name{}, errors.NewFromFmt(errors.Conv, "task.name", "less min length")
 	}
 	if MaxNameLen < utf8.RuneCountInString(s) {
-		return Name{}, errors.NewFromFmt(errfmt.Conv, "task.name", "over max length")
+		return Name{}, errors.NewFromFmt(errors.Conv, "task.name", "over max length")
 	}
 
 	return Name{value: s}, nil

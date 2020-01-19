@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/grandcolline/todo-list-api/util/errors/code"
-	"github.com/grandcolline/todo-list-api/util/errors/errfmt"
 )
 
 type codeError struct {
@@ -27,13 +26,13 @@ func New(c code.Code, msg string) error {
 	}
 }
 
-func NewFromFmt(f errfmt.ErrFmt, a ...interface{}) error {
-	if f.Code == code.OK {
+func NewFromFmt(m errMsg, a ...interface{}) error {
+	if m.Code == code.OK {
 		return nil
 	}
 	return &codeError{
-		code:  f.Code,
-		err:   fmt.Errorf(f.Str, a...),
+		code:  m.Code,
+		err:   fmt.Errorf(m.Msg, a...),
 		cause: getCause(2),
 	}
 }

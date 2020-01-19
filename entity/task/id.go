@@ -3,7 +3,6 @@ package task
 import (
 	"github.com/google/uuid"
 	"github.com/grandcolline/todo-list-api/util/errors"
-	"github.com/grandcolline/todo-list-api/util/errors/errfmt"
 )
 
 // ID タスクID
@@ -18,7 +17,7 @@ func NewID() ID {
 func ToID(s string) (ID, error) {
 	uuid, err := uuid.Parse(s)
 	if err != nil {
-		return ID{}, errors.NewFromFmt(errfmt.Conv, "task.id", err.Error())
+		return ID{}, errors.NewFromFmt(errors.Conv, "task.id", err.Error())
 	}
 	return ID{value: uuid}, nil
 }
