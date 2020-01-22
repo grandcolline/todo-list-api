@@ -47,8 +47,6 @@ func Serve() {
 	// ListenPortの作成
 	lis, err := net.Listen("tcp", ":"+appConf.Port)
 	if err != nil {
-		// FIXME: どうにかする
-		// log.Fatalf("faild to listen port: %v", err)
 		panic("faild to listen port: " + err.Error())
 	}
 	server := grpc.NewServer(
@@ -60,8 +58,6 @@ func Serve() {
 	pb.RegisterTaskServiceServer(server, taskController)
 
 	go func() {
-		// FIXME: fmtでいいのか問題を検討(つーか、ログ出てないよねw
-		// log.Printf("start grpc Server port: %s", conf.Port)
 		fmt.Printf("start grpc Server port: %s\n", appConf.Port)
 		server.Serve(lis)
 	}()
