@@ -29,7 +29,10 @@ func NewDescription() Description {
 // ToDescription はStringをタスク詳細に変換する
 func ToDescription(s string) (Description, error) {
 	// 文字数チェック
-	if utf8.RuneCountInString(s) > MaxDescriptionLen {
+	if utf8.RuneCountInString(s) < MinDescriptionLen {
+		return Description{}, errors.NewFromFmt(errors.Conv, "task.description", "less min length")
+	}
+	if MaxDescriptionLen < utf8.RuneCountInString(s) {
 		return Description{}, errors.NewFromFmt(errors.Conv, "task.description", "over max length")
 	}
 
