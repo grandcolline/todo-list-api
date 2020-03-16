@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"os"
@@ -10,36 +9,21 @@ import (
 	"github.com/grandcolline/todo-list-api/application/controller"
 	"github.com/grandcolline/todo-list-api/application/controller/proto/pb"
 	"github.com/grandcolline/todo-list-api/driver/config"
-	"github.com/grandcolline/todo-list-api/infrastructure/gateway"
-	"github.com/grandcolline/todo-list-api/infrastructure/log"
-	"github.com/grandcolline/todo-list-api/usecase/logger"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"google.golang.org/grpc"
-
-	"cloud.google.com/go/firestore"
 )
+
+var (
+	taskController *controller.TaskController
+)
+
+func InitController() {
+	taskController = controller.NewTaskController(taskRepo, loggerFactory)
+}
 
 // Serve はサーバの起動を行います
 func Serve() {
-
-	// ロガーファクトリの作成
-	var logConf config.LogConf
-	logConf.Init()
-	loggerFactory := func(id string) logger.Logger {
-		return log.NewLog(id, logConf.Level, logConf.Type, os.Stdout)
-	}
-
-	// DB接続の設定
-	var firestoreConf config.FirestoreConf
-	firestoreConf.Init()
-	ctx := context.Background()
-	cli, err := firestore.NewClient(ctx, firestoreConf.ProjectID)
-	taskGateway := gateway.NewTaskGateway(cli, ctx)
-
-	// タスクコントローラの作成
-	taskController := controller.NewTaskController(taskGateway, loggerFactory)
-
 	// アプリケーション設定の読み込み
 	var appConf config.AppConf
 	appConf.Init()

@@ -11,6 +11,15 @@ import (
 )
 
 func main() {
+	// ロガーファクトリの作成
+	driver.InitLog()
+
+	// Gatewayの作成
+	driver.InitGateway()
+
+	// タスクコントローラの作成
+	driver.InitController()
+
 	driver.Serve()
 }
 
