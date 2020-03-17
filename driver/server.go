@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/grandcolline/todo-list-api/application/controller"
-	"github.com/grandcolline/todo-list-api/application/controller/proto/pb"
+	"github.com/grandcolline/todo-list-api/adapter/controller"
+	"github.com/grandcolline/todo-list-api/adapter/controller/proto/pb"
 	"github.com/grandcolline/todo-list-api/driver/config"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"

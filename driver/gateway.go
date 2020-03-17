@@ -3,8 +3,8 @@ package driver
 import (
 	"context"
 
+	"github.com/grandcolline/todo-list-api/adapter/gateway"
 	"github.com/grandcolline/todo-list-api/driver/config"
-	"github.com/grandcolline/todo-list-api/infrastructure/gateway"
 	"github.com/grandcolline/todo-list-api/usecase/repository"
 
 	"cloud.google.com/go/firestore"

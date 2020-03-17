@@ -3,14 +3,14 @@ package driver
 import (
 	"os"
 
+	"github.com/grandcolline/todo-list-api/adapter/log"
 	"github.com/grandcolline/todo-list-api/driver/config"
-	"github.com/grandcolline/todo-list-api/infrastructure/log"
 	"github.com/grandcolline/todo-list-api/usecase/logger"
 )
 
 var loggerFactory func(id string) logger.Logger
 
-func InitLog(){
+func InitLog() {
 	// 環境変数の取得
 	var logConf config.LogConf
 	logConf.Init()
