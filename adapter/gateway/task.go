@@ -57,9 +57,9 @@ func (t *Task) ReadByID(taskID task.ID) (*entity.Task, error) {
 }
 
 // Delete タスクを削除する
-func (t *Task) Delete(taskID task.ID) error {
+func (t *Task) Delete(task *entity.Task) error {
 	var tc collection.TaskCollection
-	_, err := t.cli.Collection(tc.CollectionName()).Doc(taskID.String()).Delete(t.ctx)
+	_, err := t.cli.Collection(tc.CollectionName()).Doc(task.ID.String()).Delete(t.ctx)
 	if err != nil {
 		return errors.New(code.Database, "failed to delete task: "+err.Error())
 	}

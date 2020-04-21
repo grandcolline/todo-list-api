@@ -9,5 +9,5 @@ import (
 type Task interface {
 	Upsert(*entity.Task) error
 	ReadByID(task.ID) (*entity.Task, error)
-	Delete(task.ID) error
+	Delete(*entity.Task) error
 }
